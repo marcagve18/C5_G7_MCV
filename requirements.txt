@@ -1,0 +1,4 @@
+pycocotools
+transformers
+timm
+evaluate
