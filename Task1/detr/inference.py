@@ -3,11 +3,12 @@ from transformers import AutoImageProcessor, DetrForObjectDetection
 import torch 
 from PIL import Image, ImageDraw
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 image_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50")
-model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50")
+model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50").to(device)
 
 image = Image.open('/ghome/c5mcv07/mcv/datasets/C5/KITTI-MOTS/training/image_02/0000/000000.png')
-inputs = image_processor(images=image, return_tensors="pt")
+inputs = image_processor(images=image, return_tensors="pt").to(device)
 
 outputs = model(**inputs)
 

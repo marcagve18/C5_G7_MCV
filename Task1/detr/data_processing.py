@@ -153,17 +153,25 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
                     # Create a unique image ID (combining instance number and time frame).
                     image_id = int(str(instance_number) + "{:06d}".format(int(time_frame)))
                     
+                    category_map = {
+                        1: 3, #car
+                        2: 1, #pedestrian
+                    }
+
+                    if class_id == 10:
+                        continue
+
                     ann = {
                         "id": annotation_id,
                         "image_id": image_id,
-                        "category_id": class_id,
+                        "category_id": category_map[class_id],
                         "iscrowd": 0,
                         "area": area,
                         "bbox": bbox
                     }
                     annotation_id += 1
                     annotations_dict.setdefault(image_id, []).append(ann)
-                    categories_set.add(class_id)
+                    categories_set.add(category_map[class_id])
         
         # Build the images list by scanning through the images folder.
         images = []
@@ -206,14 +214,12 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
             annotations.extend(anns)
         
         categories_names = {
-            1: "car",
-            2: "pedestrian",
-            10: "undefined"
+            1: "pedestrian",
+            3: "car",
         }
         # Build categories list.
-        categories = [{"id": cat_id, "name": str(cat_id)} for cat_id in sorted(categories_set)]
+        categories = [{"id": cat_id, "name": categories_names[cat_id]} for cat_id in sorted(categories_set)]
     
-
         # Final COCO dictionary.
         coco_dict = {"images": images, "annotations": annotations, "categories": categories}
         return coco_dict
