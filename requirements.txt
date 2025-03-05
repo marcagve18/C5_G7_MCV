@@ -2,3 +2,5 @@ pycocotools
 transformers
 timm
 evaluate
+accelerate
+scipy

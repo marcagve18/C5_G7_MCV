@@ -30,14 +30,15 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Load image processor and model, then move model to the device
 image_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50")
 model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50")
+
 model.to(device)
 model.eval()  # set model to evaluation mode
 
 # Define dataset path and load your preprocessed Hugging Face dataset
 dataset_path = "/home/mcv/datasets/C5/KITTI-MOTS"
 train_instances_ids = [19, 20, 9, 7, 1, 8, 15, 11, 13, 18, 4, 5]
-#test_instances_ids = [10, 6, 2, 16, 0, 17, 3, 14, 12]
-test_instances_ids = [10] # TODO : Remove
+test_instances_ids = [10]  #[10, 6, 2, 16, 0, 17, 3, 14, 12]
+
 
 hf_dataset = KITTIMOTS_CocoDetection(dataset_path, instances_ids=test_instances_ids)
 print(len(hf_dataset))
@@ -63,11 +64,21 @@ with torch.no_grad():
 
         # forward pass
         outputs = model(pixel_values=pixel_values, pixel_mask=pixel_mask)
-
+      
         orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)
         results = image_processor.post_process(outputs, orig_target_sizes)  # convert outputs of model to COCO api
+        for result in results:
+            for score, label, box in zip(result["scores"], result["labels"], result["boxes"]):
+                if label.item() not in [1, 3]:
+                    #continue
+                    pass
 
-        print(results)
+                box = [round(i, 2) for i in box.tolist()]
+                print(
+                    f"Detected {model.config.id2label[label.item()]} ({label.item()}) with confidence "
+                    f"{round(score.item(), 3)} at location {box}"
+                )
+                
         coco_eval.add(prediction=results, reference=labels)
         del batch
 
