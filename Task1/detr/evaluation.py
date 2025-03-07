@@ -28,8 +28,10 @@ def collate_fn(batch):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load image processor and model, then move model to the device
-image_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50")
-model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50")
+checkpoint = 'facebook/detr-resnet-50'
+#checkpoint = 'checkpoints/first-finetune-detr/checkpoint-797'
+image_processor = AutoImageProcessor.from_pretrained(checkpoint)
+model = DetrForObjectDetection.from_pretrained(checkpoint)
 
 model.to(device)
 model.eval()  # set model to evaluation mode
