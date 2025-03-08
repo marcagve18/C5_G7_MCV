@@ -10,6 +10,7 @@ import json
 import tempfile
 import torchvision
 import numpy as np
+import cv2
 
 dataset_path = "/home/mcv/datasets/C5/KITTI-MOTS"
 
@@ -226,16 +227,16 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
     def __getitem__(self, index):
         # Get the raw image and target (in COCO format) from the parent class.
         img, target = super().__getitem__(index)
-        
         # If albumentations transforms are provided, apply them.
         if self.albumentations_transforms:
             # Convert the PIL image to a NumPy array.
             image_np = np.array(img)
+            #cv2.imwrite("img_before.png", image_np)
             
             # Extract bounding boxes and labels from target annotations.
             bboxes = [ann["bbox"] for ann in target]
             labels = [ann["category_id"] for ann in target]
-            print(labels)
+
             augmented = self.albumentations_transforms(
                 image=image_np,
                 bboxes=bboxes,
@@ -249,6 +250,7 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
                 ann["bbox"] = new_bbox
             
             img = image_np
+            #cv2.imwrite("img_after.png", img)
         
         # Get the image_id and create a target dictionary.
         image_id = self.ids[index]

@@ -1,5 +1,7 @@
 # C5 - Visual Recognition
 
+_Group 7_
+
 Code and dependencies for the MCV Visual Recognition module.
 
 ## Installation
@@ -29,5 +31,5 @@ Code and dependencies for the MCV Visual Recognition module.
 
 ## Project Structure
 
-Each task contributions are organized into their respective subfolders.
+Each week's contributions are organized into their respective subfolders.
 
