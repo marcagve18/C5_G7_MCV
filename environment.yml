@@ -310,4 +310,6 @@ dependencies:
       - xxhash==3.5.0
       - yacs==0.1.8
       - yarl==1.18.3
+      - python-dotenv
+      - wandb
 prefix: /ghome/c5mcv07/miniconda3

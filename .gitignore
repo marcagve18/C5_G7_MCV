@@ -174,3 +174,4 @@ cython_debug/
 *.out
 checkpoints/
 output/
+wandb/
