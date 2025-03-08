@@ -4,6 +4,15 @@ from data_processing import KITTIMOTS_CocoDetection
 import evaluate
 from tqdm import tqdm
 import numpy as np
+import albumentations
+
+transform = albumentations.Compose(
+    [
+        albumentations.HorizontalFlip(p=1.0),
+        albumentations.RandomBrightnessContrast(p=1.0),
+    ],
+    bbox_params=albumentations.BboxParams(format="coco", label_fields=["category"]),
+)
 
 def merge_labels(labels_list):
     """
@@ -59,7 +68,7 @@ train_instances_ids = [19, 20, 9, 7, 1, 8, 15, 11, 13, 18, 4, 5]
 test_instances_ids = [10, 6, 2, 16, 0, 17, 3, 14, 12]
 
 
-train_dataset = KITTIMOTS_CocoDetection(dataset_path, instances_ids=train_instances_ids)
+train_dataset = KITTIMOTS_CocoDetection(dataset_path, instances_ids=train_instances_ids, transforms=transform)
 test_dataset = KITTIMOTS_CocoDetection(dataset_path, instances_ids=test_instances_ids)
 print("HF Datasets loaded")
 

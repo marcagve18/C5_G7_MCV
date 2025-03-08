@@ -4,16 +4,14 @@ import pycocotools
 from PIL import Image
 from transformers import AutoImageProcessor
 from tqdm import tqdm 
-import torch
 from datasets import Dataset
 import torchvision
-from huggingface_hub import login
 import json
 import tempfile
 import torchvision
+import numpy as np
 
 dataset_path = "/home/mcv/datasets/C5/KITTI-MOTS"
-
 
 
 def get_hf_dataset():
@@ -98,6 +96,7 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
         """
         self.dataset_path = dataset_path
         self.image_processor = AutoImageProcessor.from_pretrained(processor_checkpoint)
+        self.albumentations_transforms = transforms
         
         # Build a COCO-formatted annotations dictionary from the KITTI-MOTS annotation files.
         coco_ann = self.build_coco_annotations(dataset_path, instances_ids)
@@ -111,7 +110,7 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
         # The images are stored in training/image_02 with instance folders.
         images_folder = os.path.join(dataset_path, "training", "image_02")
         # Initialize the parent CocoDetection dataset.
-        super().__init__(images_folder, ann_file, transforms=transforms)
+        super().__init__(images_folder, ann_file, transforms=None)
     
     def build_coco_annotations(self, dataset_path, instances_ids=None):
         """
@@ -227,10 +226,38 @@ class KITTIMOTS_CocoDetection(torchvision.datasets.CocoDetection):
     def __getitem__(self, index):
         # Get the raw image and target (in COCO format) from the parent class.
         img, target = super().__getitem__(index)
+        
+        # If albumentations transforms are provided, apply them.
+        if self.albumentations_transforms:
+            # Convert the PIL image to a NumPy array.
+            image_np = np.array(img)
+            
+            # Extract bounding boxes and labels from target annotations.
+            bboxes = [ann["bbox"] for ann in target]
+            labels = [ann["category_id"] for ann in target]
+            print(labels)
+            augmented = self.albumentations_transforms(
+                image=image_np,
+                bboxes=bboxes,
+                category=labels
+            )
+            # Update the image and bounding boxes with the transformed results.
+            image_np = augmented["image"]
+            new_bboxes = augmented["bboxes"]
+            
+            for ann, new_bbox in zip(target, new_bboxes):
+                ann["bbox"] = new_bbox
+            
+            img = image_np
+        
+        # Get the image_id and create a target dictionary.
         image_id = self.ids[index]
         target_dict = {"image_id": image_id, "annotations": target}
+        
         # Process image and annotations with the image processor.
         encoding = self.image_processor(images=img, annotations=target_dict, return_tensors="pt")
+        
         # Remove the batch dimension (processing one image at a time).
         return encoding
-    
+
+        
