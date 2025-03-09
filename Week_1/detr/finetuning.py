@@ -22,7 +22,7 @@ set_seed(SEED)
 
 load_dotenv()
 
-EXPERIMENT_NAME = "KITTI_v2_lower_lr"
+EXPERIMENT_NAME = "KITTI_v2_lower_lr_higher_bs"
 
 WANDB_KEY = os.getenv('WANDB_MARC')
 wandb.login(key=WANDB_KEY)
@@ -95,18 +95,22 @@ print("HF Datasets loaded")
 training_config = {
     "output_dir": f"checkpoints/{EXPERIMENT_NAME}",
     "per_device_train_batch_size": 8,
+    "gradient_accumulation_steps": 2,
     "num_train_epochs": 20,
     "fp16": True,
     "save_steps": 100,
     "logging_steps": 1,
     "evaluation_strategy": "steps",  # Evaluate during training
-    "eval_steps": 30,
+    "eval_steps": 50,
     "logging_first_step": True,    # Log the very first step
     "learning_rate": 5e-6,
     "weight_decay": 1e-4,
-    "save_total_limit": 2,
+    "save_total_limit": 10,
     "remove_unused_columns": False,
     "report_to": ['wandb'],
+    "load_best_model_at_end": True,      
+    "metric_for_best_model": "eval_loss",
+    "greater_is_better": False, 
 }
 
 wandb.init(name=EXPERIMENT_NAME, project="C5_W1_DETR", config=training_config)

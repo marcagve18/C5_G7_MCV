@@ -174,4 +174,5 @@ cython_debug/
 *.out
 checkpoints/
 output/
+outputs/
 wandb/
