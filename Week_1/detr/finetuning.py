@@ -22,7 +22,7 @@ set_seed(SEED)
 
 load_dotenv()
 
-EXPERIMENT_NAME = "_"
+EXPERIMENT_NAME = "KITTI_MOTS_v1"
 
 WANDB_KEY = os.getenv('WANDB_MARC')
 wandb.login(key=WANDB_KEY)
@@ -111,6 +111,7 @@ training_config = {
     "load_best_model_at_end": True,      
     "metric_for_best_model": "eval_loss",
     "greater_is_better": False, 
+    "dataloader_num_workers": 8,
 }
 
 wandb.init(name=EXPERIMENT_NAME, project="C5_W1_DETR", config=training_config)

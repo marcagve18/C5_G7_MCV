@@ -176,3 +176,7 @@ checkpoints/
 output/
 outputs/
 wandb/
+.conda
+.vscode
+*.png
+*.txt

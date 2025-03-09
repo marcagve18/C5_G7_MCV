@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --ntasks-per-node=4 # Number of cores
+#SBATCH --ntasks-per-node=8 # Number of cores
 #SBATCH -N 1 # Ensure that all cores are on one machine
 #SBATCH -D . # working directory
 #SBATCH -t 0-05:00 # Runtime in D-HH:MM

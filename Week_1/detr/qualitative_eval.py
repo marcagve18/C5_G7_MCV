@@ -25,9 +25,10 @@ num_examples = 20
 # ----------------------------
 # Setup model and image processor
 # ----------------------------
+checkpoint = 'checkpoints/KITTI_MOTS_v1/checkpoint-3500'
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 image_processor = AutoImageProcessor.from_pretrained("facebook/detr-resnet-50")
-model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50").to(device)
+model = DetrForObjectDetection.from_pretrained(checkpoint).to(device)
 
 # ----------------------------
 # Prepare lists to aggregate detection data
@@ -43,7 +44,7 @@ image_info_list = []
 # ----------------------------
 # Get list of all evaluation image files
 # ----------------------------
-image_files = glob.glob(eval_pattern)[:100]
+image_files = glob.glob(eval_pattern)
 print(f"Found {len(image_files)} images.")
 
 # Optionally, set a font for annotation (if available)
