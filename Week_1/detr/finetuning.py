@@ -22,7 +22,7 @@ set_seed(SEED)
 
 load_dotenv()
 
-EXPERIMENT_NAME = "KITTI_v2_lower_lr_higher_bs"
+EXPERIMENT_NAME = "_"
 
 WANDB_KEY = os.getenv('WANDB_MARC')
 wandb.login(key=WANDB_KEY)
