@@ -18,9 +18,9 @@ def build_kitti_mots_dicts(dataset_path, instances_ids=None):
     assert os.path.isdir(images_folder), f"Images folder '{images_folder}' does not exist or is not a directory."
 
     dataset_dicts = []
-    # KITTI-MOTS Classes: Pedestrian (ID: 1) / Car (ID: 2)
-    # COCO Classes: Person (ID: 0) / Car (ID: 2)
-    category_map = {1: 0, 2: 2, 3: 1}
+    # KITTI-MOTS: 1 -> car, 2 -> pedestrian
+    # COCO: 0 -> person, 1 -> bicycle, 2 -> car
+    category_map = {1: 2, 2: 0}
 
     # Iterate over each instance directory in the images folder.
     for instance_dir in sorted(os.listdir(images_folder)):

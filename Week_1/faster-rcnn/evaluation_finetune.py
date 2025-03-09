@@ -17,17 +17,22 @@ output_path = Path("/ghome/c5mcv07/C5_G7_MCV/Week_1/faster-rcnn/output/pre_train
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"DEVICE: {device}")
 
-DatasetCatalog.register("kitti_mots", lambda: build_kitti_mots_dicts("/home/mcv/datasets/C5/KITTI-MOTS", instances_ids=[1, 2, 3]))
+### FINETUNE
 
-dataset_dicts = build_kitti_mots_dicts(str(dataset_path))
-kitti_mots_metadata = MetadataCatalog.get("kitti_mots")
-kitti_mots_metadata.set(thing_classes=["person", "bicycle", "car"])
+train_instances_ids = [19, 20, 9, 7, 1, 8, 15, 11, 13, 18, 4, 5]
+test_instances_ids = [10, 6, 2, 16, 0, 17, 3, 14, 12]
+
+for split in ["train", "test"]:
+    instances_ids = train_instances_ids if split == "train" else test_instances_ids
+    DatasetCatalog.register(f"kitti_mots_{split}", lambda: build_kitti_mots_dicts("/home/mcv/datasets/C5/KITTI-MOTS", instances_ids=instances_ids))
+    MetadataCatalog.get(f"kitti_mots_{split}").set(thing_classes=["person", "bicycle", "car"])
+kitti_mots_metadata = MetadataCatalog.get("kitti_mots_train")
 
 cfg = get_cfg()
-# add project-specific config (e.g., TensorMask) here if you're not running a model in detectron2's core library
-cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml"))
-# Find a model from detectron2's model zoo. You can use the https://dl.fbaipublicfiles... url as well
-cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml")
+# Inference should use the config with parameters that are used in training
+# cfg now already contains everything we've set previously. We changed it a little bit for inference:
+cfg.MODEL.WEIGHTS = str(output_path / "model_final.pth")  # path to the model we just trained
+cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold
 # Output folder
 cfg.OUTPUT_DIR = str(output_path)
 cfg.MODEL.DEVICE = device
@@ -35,7 +40,7 @@ cfg.MODEL.DEVICE = device
 # Run inference on all images
 output_path = Path(cfg.OUTPUT_DIR)
 output_path.mkdir(parents=True, exist_ok=True)
-predictor = CustomPredictor(cfg)
+predictor = DefaultPredictor(cfg)
 
 evaluator = COCOEvaluator("kitti_mots", output_dir=cfg.OUTPUT_DIR)
 val_loader = build_detection_test_loader(cfg, "kitti_mots")

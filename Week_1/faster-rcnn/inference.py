@@ -13,7 +13,7 @@ from predictor import CustomPredictor
 
 
 dataset_path = Path("/home/mcv/datasets/C5/KITTI-MOTS")
-output_path = Path("/ghome/c5mcv07/C5_G7_MCV/Task1/faster-rcnn/output/pre_trained_inference")
+output_path = Path("/ghome/c5mcv07/C5_G7_MCV/Week_1/faster-rcnn/output/pre_trained_inference")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"DEVICE: {device}")
@@ -22,14 +22,14 @@ DatasetCatalog.register("kitti_mots", lambda: build_kitti_mots_dicts("/home/mcv/
 
 dataset_dicts = build_kitti_mots_dicts(str(dataset_path))
 kitti_mots_metadata = MetadataCatalog.get("kitti_mots")
-kitti_mots_metadata.set(thing_classes=["pedestrian", "car"])
+kitti_mots_metadata.set(thing_classes=["person", "bicycle", "car"])
 
 cfg = get_cfg()
 # add project-specific config (e.g., TensorMask) here if you're not running a model in detectron2's core library
-cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_R_50_DC5_3x.yaml"))
+cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml"))
 cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
 # Find a model from detectron2's model zoo. You can use the https://dl.fbaipublicfiles... url as well
-cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_R_50_DC5_3x.yaml")
+cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml")
 # Output folder
 cfg.OUTPUT_DIR = str(output_path)
 cfg.MODEL.DEVICE = device
@@ -48,16 +48,9 @@ for d in tqdm(dataset_dicts):
 
     img = cv2.imread(str(file_name))[:, :, ::-1]
     outputs = predictor(img)  # Run inference
-
-    # Filter predictions by class (keep only classes 0 -> person and 2 -> car)
     instances = outputs["instances"]
-    classes = instances.pred_classes  # Get the predicted class IDs
-    mask = torch.isin(classes, torch.as_tensor([0, 2]).to(device))  # Create a mask for classes 0 and 2
-    filtered_instances = instances[mask]  # Apply the mask to filter instances
-    pred_classes = filtered_instances.pred_classes
-    pred_classes[pred_classes == 2] = 1  # Map car class to 1
 
     # Use the filtered instances for visualization
-    v = Visualizer(img, MetadataCatalog.get(cfg.DATASETS.TRAIN[0]), scale=1.2)
-    out = v.draw_instance_predictions(filtered_instances.to("cpu"))
+    v = Visualizer(img, kitti_mots_metadata, scale=0.5)
+    out = v.draw_instance_predictions(instances.to("cpu"))
     cv2.imwrite(str(output_file), out.get_image())

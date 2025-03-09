@@ -11,4 +11,4 @@
 #SBATCH -e out/%j.err # File to which STDERR will be written
 
 # Capture Python logs into a timestamped file in the logs directory
-python evaluation.py
+python inference.py

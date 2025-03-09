@@ -9,10 +9,8 @@ class CustomPredictor(DefaultPredictor):
         return outputs
 
     def filter_instances(self, instances):
-        """Keep only allowed classes: COCO class IDs (0=person, 2=car) and map to
-        (0=person, 1=car)"""
+        """Keep only allowed classes: COCO class IDs (0=person, 2=car)"""
         pred_classes = instances.pred_classes.tolist()
         keep = [i for i, cls in enumerate(pred_classes) if cls in [0, 2]]
         filtered_instances = instances[keep]
-        filtered_instances.pred_classes[filtered_instances.pred_classes == 2] = 1  # Map car class to 1
         return filtered_instances
