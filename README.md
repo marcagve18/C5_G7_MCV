@@ -33,3 +33,8 @@ Code and dependencies for the MCV Visual Recognition module.
 
 Each week's contributions are organized into their respective subfolders.
 
+## Slides
+
+### Week 1
+
+https://docs.google.com/presentation/d/1YCXzt5JyVc2UkfZsUPJszUObIHSewzpYRMjbO4Q1GyI/edit?usp=sharing
