@@ -17,7 +17,7 @@ output_path = Path("/ghome/c5mcv07/C5_G7_MCV/Week_1/faster-rcnn/output/pre_train
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"DEVICE: {device}")
 
-DatasetCatalog.register("kitti_mots", lambda: build_kitti_mots_dicts("/home/mcv/datasets/C5/KITTI-MOTS", instances_ids=[1, 2, 3]))
+DatasetCatalog.register("kitti_mots", lambda: build_kitti_mots_dicts("/home/mcv/datasets/C5/KITTI-MOTS"))
 
 dataset_dicts = build_kitti_mots_dicts(str(dataset_path))
 kitti_mots_metadata = MetadataCatalog.get("kitti_mots")
