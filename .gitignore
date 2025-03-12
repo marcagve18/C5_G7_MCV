@@ -180,3 +180,6 @@ wandb/
 .vscode
 *.png
 *.txt
+/Week_1/faster-rcnn/output
+/Week_1/faster-rcnn/out
+processed_datasets/
