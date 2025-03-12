@@ -21,7 +21,7 @@ for instance_metadata in tqdm(sorted(os.listdir(dataset_path + "/instances_txt")
             splitted = line.split(" ")
             time_frame = splitted[0]
             object_id = splitted[1]
-            class_id = splitted[2]
+            class_id = int(splitted[2]) if int(splitted[2]) != 10 else 0
             img_height = splitted[3]
             img_width = splitted[4]
             rle = splitted[5].replace("\n", "")

@@ -14,13 +14,11 @@ sleep 5
 /ghome/share/example/deviceQuery
 nvidia-smi
 
-python run_instance_segmentation.py \
+python train.py \
     --model_name_or_path facebook/mask2former-swin-tiny-coco-instance \
     --output_dir finetune-instance-segmentation-ade20k-mini-mask2former \
-    --dataset_name qubvel-hf/ade20k-mini \
+    --dataset_name marcagve18/kitti-mots-instance-seg \
     --do_reduce_labels \
-    --image_height 256 \
-    --image_width 256 \
     --do_train \
     --fp16 \
     --num_train_epochs 40 \
@@ -36,4 +34,5 @@ python run_instance_segmentation.py \
     --logging_strategy epoch \
     --save_strategy epoch \
     --save_total_limit 2 \
+    --token \
     --push_to_hub
