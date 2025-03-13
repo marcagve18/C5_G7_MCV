@@ -14,9 +14,14 @@ sleep 5
 /ghome/share/example/deviceQuery
 nvidia-smi
 
+# Set env vars
+set -a # automatically export all variables
+source /ghome/c5mcv07/C5_G7_MCV/.env
+set +a
+
 python train.py \
     --model_name_or_path facebook/mask2former-swin-tiny-coco-instance \
-    --output_dir finetune-instance-segmentation-ade20k-mini-mask2former \
+    --output_dir checkpoints/Mask2Former_KITTI_v1 \
     --dataset_name marcagve18/kitti-mots-instance-seg \
     --do_reduce_labels \
     --do_train \
@@ -34,5 +39,5 @@ python train.py \
     --logging_strategy epoch \
     --save_strategy epoch \
     --save_total_limit 2 \
-    --token \
+    --token $HF_MARC \
     --push_to_hub

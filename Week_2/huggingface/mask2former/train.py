@@ -35,13 +35,24 @@ from transformers import (
     HfArgumentParser,
     Trainer,
     TrainingArguments,
+    set_seed
 )
 from transformers.image_processing_utils import BatchFeature
 from transformers.trainer import EvalPrediction
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
+from dotenv import load_dotenv
+import wandb
 
+SEED = 42
+
+# Set seeds for Python, NumPy, and PyTorch
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed(SEED)
+    torch.cuda.manual_seed_all(SEED)
 
 logger = logging.getLogger(__name__)
 
@@ -344,6 +355,12 @@ def main():
     # or by passing the --help flag to this script.
 
     parser = HfArgumentParser([Arguments, TrainingArguments])
+
+    EXPERIMENT_NAME = training_args.output_dir.split("/")[1].trim()
+
+    WANDB_KEY = os.getenv('WANDB_MARC')
+    wandb.login(key=WANDB_KEY)
+
     if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
         # If we pass only one argument to the script and it's the path to a json file,
         # let's parse it to get our arguments.
@@ -439,6 +456,7 @@ def main():
     # ------------------------------------------------------------------------------------------------
 
     compute_metrics = Evaluator(image_processor=image_processor, id2label=id2label, threshold=0.0)
+    wandb.init(name=EXPERIMENT_NAME, project="C5_W1_DETR", config=training_args)
 
     trainer = Trainer(
         model=model,
