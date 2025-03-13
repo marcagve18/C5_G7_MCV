@@ -356,17 +356,17 @@ def main():
 
     parser = HfArgumentParser([Arguments, TrainingArguments])
 
-    EXPERIMENT_NAME = training_args.output_dir.split("/")[1].trim()
-
-    WANDB_KEY = os.getenv('WANDB_MARC')
-    wandb.login(key=WANDB_KEY)
-
     if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
         # If we pass only one argument to the script and it's the path to a json file,
         # let's parse it to get our arguments.
         args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
     else:
         args, training_args = parser.parse_args_into_dataclasses()
+
+    EXPERIMENT_NAME = training_args.output_dir.split("/")[1].strip()
+
+    WANDB_KEY = os.getenv('WANDB_MARC')
+    wandb.login(key=WANDB_KEY)
 
     # Set default training arguments for instance segmentation
     training_args.eval_do_concat_batches = False
@@ -456,7 +456,7 @@ def main():
     # ------------------------------------------------------------------------------------------------
 
     compute_metrics = Evaluator(image_processor=image_processor, id2label=id2label, threshold=0.0)
-    wandb.init(name=EXPERIMENT_NAME, project="C5_W1_DETR", config=training_args)
+    wandb.init(name=EXPERIMENT_NAME, project="C5_W2_Mask2Former", config=training_args)
 
     trainer = Trainer(
         model=model,
