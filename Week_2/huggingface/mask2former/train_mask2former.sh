@@ -19,7 +19,6 @@ set -a # automatically export all variables
 source /ghome/c5mcv07/C5_G7_MCV/.env
 set +a
 
-CUDA_LAUNCH_BLOCKING=1
 
 python train.py \
     --model_name_or_path facebook/mask2former-swin-tiny-coco-instance \
@@ -36,10 +35,16 @@ python train.py \
     --dataloader_persistent_workers \
     --dataloader_prefetch_factor 4 \
     --do_eval \
-    --evaluation_strategy epoch \
-    --logging_strategy epoch \
-    --save_strategy epoch \
+    --evaluation_strategy steps \
+    --eval_steps 200 \
+    --logging_strategy steps \
+    --logging_steps 1 \
+    --save_steps 200 \
+    --save_strategy steps \
     --save_total_limit 2 \
+    --load_best_model_at_end \
+    --metric_for_best_model eval_loss \
+    --greater_is_better false \
     --token $HF_MARC \
     --report_to wandb \
     --push_to_hub \
