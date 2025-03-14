@@ -19,11 +19,12 @@ set -a # automatically export all variables
 source /ghome/c5mcv07/C5_G7_MCV/.env
 set +a
 
+CUDA_LAUNCH_BLOCKING=1
+
 python train.py \
     --model_name_or_path facebook/mask2former-swin-tiny-coco-instance \
     --output_dir checkpoints/Mask2Former_KITTI_v1 \
     --dataset_name marcagve18/kitti-mots-instance-seg \
-    --do_reduce_labels \
     --do_train \
     --fp16 \
     --num_train_epochs 40 \

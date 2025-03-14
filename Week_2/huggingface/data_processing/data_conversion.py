@@ -22,7 +22,9 @@ for instance_metadata in tqdm(sorted(os.listdir(dataset_path + "/instances_txt")
             splitted = line.split(" ")
             time_frame = splitted[0]
             object_id = splitted[1]
-            class_id = int(splitted[2]) if int(splitted[2]) != 10 else 0
+            class_id = int(splitted[2]) 
+            if class_id == 10:
+                continue
             img_height = splitted[3]
             img_width = splitted[4]
             rle = splitted[5].replace("\n", "")
@@ -40,11 +42,13 @@ for instance_metadata in tqdm(sorted(os.listdir(dataset_path + "/instances_txt")
             if time_frame not in masks:
                 masks[time_frame] = np.zeros((mask.shape[0], mask.shape[1], 3))
 
-            # First channel: Semantic segmentation
-            masks[time_frame][:, :, 0] += mask * int(class_id)
-            
-            # Second channel: Instance segmentation with unique instance ID
+            # First channel (Blue) is kept empty.
+            # Second channel (Green): Instance segmentation with unique instance ID.
             masks[time_frame][:, :, 1] += mask * instance_counters[time_frame]
+            instance_counters[time_frame] += 1  # Increment instance counter for next object
+
+            # Third channel (Red): Semantic segmentation
+            masks[time_frame][:, :, 2] += mask * int(class_id)
             instance_counters[time_frame] += 1  # Increment instance counter for next object
 
             if time_frame not in images:
@@ -55,6 +59,7 @@ for instance_metadata in tqdm(sorted(os.listdir(dataset_path + "/instances_txt")
     for (time_frame, image), (_, mask_annotation) in zip(images.items(), masks.items()):
         # Optionally, assert that the keys match:
         assert time_frame == _, "Keys do not match"
+        print(mask_annotation.shape)
         cv2.imwrite(f"{os.path.join(output_instance_path, f"{int(time_frame):06d}")}.png", image)
         cv2.imwrite(f"{os.path.join(output_instance_path, f"{int(time_frame):06d}")}_mask.png", mask_annotation)
 

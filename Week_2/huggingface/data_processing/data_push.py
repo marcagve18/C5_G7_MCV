@@ -3,9 +3,12 @@ from datasets import Image as DatasetImage
 from PIL import Image
 import os
 from huggingface_hub import login
+from dotenv import load_dotenv
+import numpy as np
+from tqdm import tqdm
 
-
-HF_TOKEN = ''
+load_dotenv()
+HF_TOKEN = os.getenv('HF_MARC')
 login(HF_TOKEN)
 
 train_instances_ids = [19, 20, 9, 7, 1, 8, 15, 11, 13, 18, 4, 5]
@@ -25,9 +28,15 @@ def get_instance_images(instance_id: int):
     masks_filenames = list(filter(lambda x: x.endswith("_mask.png"), files))
     images_filenames = list(filter(lambda x: not x.endswith("_mask.png"), files))
     
-    masks = [Image.open(os.path.join(dataset_path, f"{int(instance_id):04d}", filename)) for filename in masks_filenames]
-    images = [Image.open(os.path.join(dataset_path, f"{int(instance_id):04d}", filename)) for filename in images_filenames]
-   
+    masks = [
+        Image.open(os.path.join(dataset_path, f"{int(instance_id):04d}", filename)).convert("RGB")
+        for filename in tqdm(masks_filenames, desc="Loading masks")
+    ]
+    
+    images = [
+        Image.open(os.path.join(dataset_path, f"{int(instance_id):04d}", filename))
+        for filename in tqdm(images_filenames, desc="Loading images")
+    ]
     return images, masks
 
 train_images, train_annotations = [], []
@@ -52,6 +61,7 @@ validation_split = {
     "image": test_images,
     "annotation": test_annotations,
 }
+
 
 def create_instance_segmentation_dataset(label2id, **splits):
     dataset_dict = {}

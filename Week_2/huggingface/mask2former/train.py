@@ -122,10 +122,8 @@ def augment_and_transform_batch(
 
     for pil_image, pil_annotation in zip(examples["image"], examples["annotation"]):
         image = np.array(pil_image)
-        logger.info(np.array(pil_annotation).shape)
-        semantic_and_instance_masks = np.array(pil_annotation)
-
-        logger.info(f"{image.shape} {semantic_and_instance_masks.shape}")
+        semantic_and_instance_masks = np.array(pil_annotation)[..., :2]
+        
         # Apply augmentations
         output = transform(image=image, mask=semantic_and_instance_masks)
 
