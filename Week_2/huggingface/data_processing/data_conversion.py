@@ -15,6 +15,7 @@ for instance_metadata in tqdm(sorted(os.listdir(dataset_path + "/instances_txt")
     instance_number = int(instance_str)
     masks = {}
     images = {}
+    instance_counters = {}
     with open(dataset_path + "/instances_txt/" + instance_metadata, "r") as file:
         time_frames_annotations = {}
         for line in file:
@@ -33,11 +34,18 @@ for instance_metadata in tqdm(sorted(os.listdir(dataset_path + "/instances_txt")
 
             mask = pycocotools.mask.decode(coco_decode)
 
-            if time_frame not in masks:
-                masks[time_frame] = np.zeros(mask.shape)
+            if time_frame not in instance_counters:
+                instance_counters[time_frame] = 1
 
-            mask_label_encoded = mask * int(class_id)
-            masks[time_frame] += mask_label_encoded
+            if time_frame not in masks:
+                masks[time_frame] = np.zeros((mask.shape[0], mask.shape[1], 3))
+
+            # First channel: Semantic segmentation
+            masks[time_frame][:, :, 0] += mask * int(class_id)
+            
+            # Second channel: Instance segmentation with unique instance ID
+            masks[time_frame][:, :, 1] += mask * instance_counters[time_frame]
+            instance_counters[time_frame] += 1  # Increment instance counter for next object
 
             if time_frame not in images:
                 images[time_frame] = cv2.imread(os.path.join(dataset_path, f'training/image_02/{instance_str}/{int(time_frame):06d}.png'))

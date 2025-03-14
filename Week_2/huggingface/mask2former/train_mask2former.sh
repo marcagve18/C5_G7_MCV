@@ -41,4 +41,5 @@ python train.py \
     --save_total_limit 2 \
     --token $HF_MARC \
     --report_to wandb \
-    --push_to_hub
+    --push_to_hub \
+    --overwrite_output_dir

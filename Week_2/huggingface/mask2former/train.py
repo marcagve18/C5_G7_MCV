@@ -122,8 +122,10 @@ def augment_and_transform_batch(
 
     for pil_image, pil_annotation in zip(examples["image"], examples["annotation"]):
         image = np.array(pil_image)
-        semantic_and_instance_masks = np.array(pil_annotation)[..., :2]
+        logger.info(np.array(pil_annotation).shape)
+        semantic_and_instance_masks = np.array(pil_annotation)
 
+        logger.info(f"{image.shape} {semantic_and_instance_masks.shape}")
         # Apply augmentations
         output = transform(image=image, mask=semantic_and_instance_masks)
 
@@ -456,7 +458,7 @@ def main():
     # ------------------------------------------------------------------------------------------------
 
     compute_metrics = Evaluator(image_processor=image_processor, id2label=id2label, threshold=0.0)
-    wandb.init(name=EXPERIMENT_NAME, project="C5_W2_Mask2Former", config=training_args)
+    wandb.init(name=EXPERIMENT_NAME, project="C5_W2_MASK2FORMER", config=training_args)
 
     trainer = Trainer(
         model=model,
