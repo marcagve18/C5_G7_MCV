@@ -178,7 +178,6 @@ outputs/
 wandb/
 .conda
 .vscode
-*.png
 *.txt
 /Week_1/faster-rcnn/output
 /Week_1/faster-rcnn/out
