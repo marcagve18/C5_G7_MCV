@@ -22,7 +22,7 @@ set +a
 
 python train.py \
     --model_name_or_path facebook/mask2former-swin-tiny-coco-instance \
-    --output_dir checkpoints/Mask2Former_KITTI_v1 \
+    --output_dir  \
     --dataset_name marcagve18/kitti-mots-instance-seg \
     --do_train \
     --fp16 \

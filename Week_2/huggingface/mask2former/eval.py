@@ -17,9 +17,11 @@ image_dir = "/home/mcv/datasets/C5/KITTI-MOTS/training/image_02"  # directory wi
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
+#checkpoint = "facebook/mask2former-swin-tiny-coco-instance"
+checkpoint = "/ghome/c5mcv07/C5_G7_MCV/Week_2/huggingface/mask2former/checkpoints/Mask2Former_KITTI_v1/checkpoint-2000"
 # Load the processor and model
-processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-large-coco-instance")
-model = Mask2FormerForUniversalSegmentation.from_pretrained("facebook/mask2former-swin-large-coco-instance")
+processor = AutoImageProcessor.from_pretrained(checkpoint)
+model = Mask2FormerForUniversalSegmentation.from_pretrained(checkpoint)
 model.to(device)
 model.eval()  # set model to evaluation mode
 
@@ -76,7 +78,9 @@ for image_info in tqdm(coco_gt.loadImgs(img_ids), desc="Evaluating"):
         else:
             print(f"adding {model.config.id2label[category_id]}")
         
-        model_person_category = model.config.label2id["person"]
+        print(model.config.label2id)
+        #model_person_category = model.config.label2id["person"]
+        model_person_category = model.config.label2id["pedestrian"]
         model_car_category = model.config.label2id["car"]
 
         category_map = {
