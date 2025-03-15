@@ -14,4 +14,4 @@ sleep 5
 /ghome/share/example/deviceQuery
 nvidia-smi
 
-python qualitative_eval_comparison.py
+python comparison.py

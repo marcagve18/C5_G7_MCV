@@ -296,9 +296,9 @@ finetuned_model = Mask2FormerForUniversalSegmentation.from_pretrained("/ghome/c5
 finetuned_model.to(device)
 
 # Run evaluations
-baseline_metrics = run_evaluation(baseline_processor, baseline_model, eval_img_paths, threshold=0.5,
+baseline_metrics = run_evaluation(baseline_processor, baseline_model, eval_img_paths, threshold=0.9,
                                   allowed_classes=allowed_classes, output_dir="outputs_baseline")
-finetuned_metrics = run_evaluation(finetuned_processor, finetuned_model, eval_img_paths, threshold=0.5,
+finetuned_metrics = run_evaluation(finetuned_processor, finetuned_model, eval_img_paths, threshold=0.9,
                                    allowed_classes=allowed_classes, output_dir="outputs_finetuned")
 
 # ---------------------------
