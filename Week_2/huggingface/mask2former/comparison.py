@@ -118,7 +118,7 @@ def main():
         for file in os.listdir(instance_folder):
             if file.endswith(".png"):
                 eval_img_paths.append(os.path.join(instance_folder, file))
-    eval_img_paths = eval_img_paths[:100]  # Limit to 100 images for evaluation
+    eval_img_paths = eval_img_paths[:4000]  # Limit to 100 images for evaluation
 
     # Load baseline model and its processor
     baseline_processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-large-coco-instance")

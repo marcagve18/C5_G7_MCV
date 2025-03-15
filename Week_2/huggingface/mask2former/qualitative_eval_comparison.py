@@ -283,7 +283,7 @@ for instance_id in os.listdir(instances_path):
     for file in os.listdir(instance_folder):
         if file.endswith(".png"):
             eval_img_paths.append(os.path.join(instance_folder, file))
-eval_img_paths = eval_img_paths[:100]
+eval_img_paths = eval_img_paths[:4000]
 
 # Load the baseline model and its processor
 baseline_processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-large-coco-instance")
