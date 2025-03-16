@@ -72,7 +72,7 @@ for image_info in tqdm(coco_gt.loadImgs(img_ids), desc="Evaluating"):
         # COCO expects the 'counts' field as a string, not bytes
         encoded_mask["counts"] = encoded_mask["counts"].decode("utf-8")
         
-        if model.config.id2label[category_id] not in ["car", "person"]:
+        if model.config.id2label[category_id] not in ["car", "pedestrian"]:
             print(f"skipping {model.config.id2label[category_id]}")
             continue
         else:
