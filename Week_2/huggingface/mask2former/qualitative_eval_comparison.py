@@ -286,8 +286,8 @@ for instance_id in os.listdir(instances_path):
 eval_img_paths = eval_img_paths[:4000]
 
 # Load the baseline model and its processor
-baseline_processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-large-coco-instance")
-baseline_model = Mask2FormerForUniversalSegmentation.from_pretrained("facebook/mask2former-swin-large-coco-instance")
+baseline_processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-tiny-coco-instance")
+baseline_model = Mask2FormerForUniversalSegmentation.from_pretrained("facebook/mask2former-swin-tiny-coco-instance")
 baseline_model.to(device)
 
 # Load the finetuned model and its processor (adjust the paths accordingly)

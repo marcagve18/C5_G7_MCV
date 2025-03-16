@@ -121,8 +121,8 @@ def main():
     eval_img_paths = eval_img_paths[:4000]  # Limit to 100 images for evaluation
 
     # Load baseline model and its processor
-    baseline_processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-large-coco-instance")
-    baseline_model = Mask2FormerForUniversalSegmentation.from_pretrained("facebook/mask2former-swin-large-coco-instance")
+    baseline_processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-tiny-coco-instance")
+    baseline_model = Mask2FormerForUniversalSegmentation.from_pretrained("facebook/mask2former-swin-tiny-coco-instance")
     baseline_model.to(device)
 
     # Load finetuned model and its processor (adjust the paths accordingly)
