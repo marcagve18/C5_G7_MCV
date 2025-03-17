@@ -183,3 +183,4 @@ wandb/
 /Week_1/faster-rcnn/out
 processed_datasets/
 *.png
+dataset
