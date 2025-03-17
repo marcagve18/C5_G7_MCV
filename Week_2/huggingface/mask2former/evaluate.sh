@@ -5,8 +5,7 @@
 #SBATCH -t 0-05:00 # Runtime in D-HH:MM
 #SBATCH -p mlow # Partition to submit to
 #SBATCH -q masterhigh  # This way will only requeue of dcc partition
-#SBATCH --mem 32000 # 4GB memory
-#SBATCH --gres gpu:1 # Request of 1 gpu
+#SBATCH --mem 4000 # 4GB memory
 #SBATCH -o out/%j.out # File to which STDOUT will be written
 #SBATCH -e out/%j.err # File to which STDERR will be written
 
@@ -14,4 +13,4 @@ sleep 5
 /ghome/share/example/deviceQuery
 nvidia-smi
 
-python comparison.py
+python quantitative_eval.py

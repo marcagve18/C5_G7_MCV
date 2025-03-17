@@ -1,5 +1,7 @@
 import torch
 from pathlib import Path
+import cv2
+from tqdm import tqdm
 
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
@@ -7,6 +9,7 @@ from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.engine import DefaultTrainer
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 from detectron2.data import build_detection_test_loader
+from detectron2.utils.visualizer import Visualizer
 
 from dataset import build_kitti_mots_dicts
 from predictor import CustomPredictor
@@ -54,8 +57,6 @@ trainer = DefaultTrainer(cfg)
 trainer.resume_or_load(resume=False)
 trainer.train()
 
-# Evaluate finetune
-
 # Inference should use the config with parameters that are used in training
 # cfg now already contains everything we've set previously. We changed it a little bit for inference:
 cfg.MODEL.WEIGHTS = str(output_path / "model_final.pth")  # path to the model we just trained
@@ -64,6 +65,27 @@ cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold
 cfg.OUTPUT_DIR = str(output_path)
 cfg.MODEL.DEVICE = device
 predictor = CustomPredictor(cfg)
+
+# Save inference
+
+dataset_dicts = build_kitti_mots_dicts(str(dataset_path), instances_ids=[0])
+for d in tqdm(dataset_dicts):
+    file_name = Path(d["file_name"])
+    image_id = d["image_id"]
+
+    output_file = output_path / file_name.parent.name / file_name.name
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+
+    img = cv2.imread(str(file_name))[:, :, ::-1]
+    outputs = predictor(img)  # Run inference
+    instances = outputs["instances"]
+
+    # Use the filtered instances for visualization
+    v = Visualizer(img, kitti_mots_metadata, scale=0.5)
+    out = v.draw_instance_predictions(instances.to("cpu"))
+    cv2.imwrite(str(output_file), out.get_image()[:, :, ::-1])
+
+# Evaluate finetune
 
 evaluator = COCOEvaluator("kitti_mots_test", output_dir=cfg.OUTPUT_DIR)
 val_loader = build_detection_test_loader(cfg, "kitti_mots_test")

@@ -1,0 +1,12 @@
+train: /home/c5mcv07/C5_G7_MCV/Week_2/yolo/src/images/train
+val: /home/c5mcv07/C5_G7_MCV/Week_2/yolo/src/images/val
+nc: 2
+names: ['person', 'car']
+augmentation:
+  fliplr: 0.5  # Horizontal flip
+  hsv_h: 0.015  # Random hue shift
+  hsv_s: 0.7    # Random saturation shift
+  hsv_v: 0.4    # Random value shift
+  rotate: 10    # Random rotation up to 10 degrees
+  scale: 0.5    # Random scaling
+  translate: 0.1  # Random translation
