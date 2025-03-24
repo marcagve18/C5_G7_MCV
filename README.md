@@ -42,3 +42,7 @@ https://docs.google.com/presentation/d/1YCXzt5JyVc2UkfZsUPJszUObIHSewzpYRMjbO4Q1
 ### Week 2
 
 https://docs.google.com/presentation/d/1Zc9HzokBreelBjp6Xtkyj5AlbQGx_U1a9sG6fij6n14/edit?usp=sharing
+
+### Week 3
+
+Image captioning report: https://overleaf.cvc.uab.es/read/tzndymvrqpmh#43fe93
