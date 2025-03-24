@@ -46,4 +46,5 @@ https://docs.google.com/presentation/d/1Zc9HzokBreelBjp6Xtkyj5AlbQGx_U1a9sG6fij6
 ### Week 3
 
 https://docs.google.com/presentation/d/1UGJZ7NfUVgfdliZ4ZuoDI1EViP4OPB6Z9F_-2-e7kWI/edit?usp=sharing
+
 Image captioning report: https://overleaf.cvc.uab.es/read/tzndymvrqpmh#43fe93
