@@ -10,6 +10,9 @@ from constants import ANNOTATIONS_PATH, OUTPUTS_PATH
 def get_annotations():
     annotations_df = pd.read_csv(ANNOTATIONS_PATH, index_col=0)
     annotations_df['Image_Name'] = annotations_df['Image_Name'].apply(lambda x: f'{x}.jpg')
+    annotations_df = annotations_df[~annotations_df['Image_Name'].str.contains('#NAME', na=False)]
+    annotations_df = annotations_df[~annotations_df['Title'].apply(lambda x: isinstance(x, float))]
+    
     return annotations_df
 
 def get_train_val_test_annotations_split(splits=[0.8,0.1,0.1]):
