@@ -9,6 +9,16 @@ sys.path.insert(0, "/ghome/c5mcv07/C5_G7_MCV")
 from Image_Captioning_Utils.metrics import calculate_metrics
 from Image_Captioning_Utils.dataset import FoodDatasetWord
 from Image_Captioning_Utils.utils import get_train_val_test_annotations_split
+import numpy as np
+
+SEED = 42
+
+# Set seeds for Python, NumPy, and PyTorch
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed(SEED)
+    torch.cuda.manual_seed_all(SEED)
 
 model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
