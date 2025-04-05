@@ -6,8 +6,6 @@ def calculate_metrics(predictions, references):
     rouge_metric = evaluate.load("rouge")
     meteor_metric = evaluate.load("meteor")
     
-    print(predictions)
-    print(references)
     # Compute BLEU scores
     bleu1 = bleu_metric.compute(predictions=predictions, references=references, max_order=1)['bleu']
     bleu2 = bleu_metric.compute(predictions=predictions, references=references, max_order=2)['bleu']

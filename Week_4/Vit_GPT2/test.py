@@ -20,44 +20,27 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed(SEED)
     torch.cuda.manual_seed_all(SEED)
 
-model_name = "nlpconnect/vit-gpt2-image-captioning"
-#model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/decoder/decoder_long_saved"
-#model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/vit-gpt2-food-captioning-two-stage/stage2_full_finetune/best_model_final"
-#model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/encoder/deleteme_encoder/checkpoint-2500"
-#model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/all/deleteme_all/checkpoint-2700"
-#model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/decoder/decoder_long_data_aug"
-model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/all/all_long_data_aug"
-
-
-model = VisionEncoderDecoderModel.from_pretrained(model_name)
+model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
+# Load the checkpoint
+checkpoint_path = None
+if checkpoint_path is not None:
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    model.load_state_dict(checkpoint)
 
-model.eval()
-max_length = 16
+    # Optionally, set to evaluation mode
+    model.eval()
+
+    print("Checkpoint loaded successfully!")
+
+max_length = 32
 num_beams = 4
-gen_kwargs = {"max_length": max_length,
-    "num_beams": num_beams,
-    "do_sample": False,
-    "top_k": 50,    # or an appropriate value
-    "top_p": 0.95,
-    "repetition_penalty": 1.5,
-    "no_repeat_ngram_size": 2}
-
-gen_kwargs = {
-    "max_length": 20, # Allow slightly longer for sampling
-    "num_beams": 1, # MUST be 1 for sampling
-    "do_sample": True,
-    "top_k": 50,
-    "top_p": 0.9, # Slightly tighter p
-    "temperature": 0.7, # Reduce temperature for less randomness
-    "repetition_penalty": 1.3, # Reduce penalty
-    "no_repeat_ngram_size": 2, # Try 2 first
-}
+gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
 def custom_collate_fn(batch):
     # Assume each element in batch is a tuple: (image, caption)
@@ -108,8 +91,7 @@ with torch.no_grad():
         all_predicted_captions.extend(preds)
 
 
-print(all_true_captions)
-print(all_predicted_captions)
+
 # Calculate and print evaluation metrics
 metrics = calculate_metrics(all_true_captions, all_predicted_captions)
 print("Evaluation Metrics:")
