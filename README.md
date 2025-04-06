@@ -55,4 +55,6 @@ Each week's contributions are organized into their respective subfolders.
 [https://docs.google.com/presentation/d/1YXVs6r10SlkuKceIR7PYH3LX8GNaq-RlU1gITGXzP6U/edit?usp=sharing
 ](https://docs.google.com/presentation/d/1YXVs6r10SlkuKceIR7PYH3LX8GNaq-RlU1gITGXzP6U/edit?usp=sharing
 )
+
+
 Image captioning report: https://overleaf.cvc.uab.es/read/tzndymvrqpmh#43fe93
