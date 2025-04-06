@@ -20,7 +20,9 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed(SEED)
     torch.cuda.manual_seed_all(SEED)
 
-model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+model_name = "nlpconnect/vit-gpt2-image-captioning"
+#model_name = "/ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/decoder/decoder_long_data_aug"
+model = VisionEncoderDecoderModel.from_pretrained(model_name)
 feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 
@@ -57,8 +59,11 @@ def custom_collate_fn(batch):
 
 def predict_step(pixel_values):
     output_ids = model.generate(pixel_values, **gen_kwargs)
+    print(output_ids)
     preds = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
     preds = [pred.strip() for pred in preds]
+    print(preds)
+    exit()
     return preds
 
 splits = get_train_val_test_annotations_split()

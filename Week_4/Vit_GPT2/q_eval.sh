@@ -10,4 +10,5 @@
 #SBATCH -o out/%j.out # File to which STDOUT will be written
 #SBATCH -e out/%j.err # File to which STDERR will be written
 
-python test.py
+python qualitative_eval.py --checkpoint /ghome/c5mcv07/C5_G7_MCV/Week_4/Vit_GPT2/checkpoints/decoder/decoder_long_saved --output_dir ./results --num_samples 50
+
