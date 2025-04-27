@@ -54,4 +54,7 @@ Each week's contributions are organized into their respective subfolders.
 ### Week 5
 [Slides](https://docs.google.com/presentation/d/1cbFiVJTJ_ffIZAediAyHjuxa7HqB1jzrm93OWFEQ_a4/edit?usp=sharing)
 
+### Final Week
+[Slides](https://docs.google.com/presentation/d/1giNEMX9ONhv028DE4jqcesatShZhrWf6hUq_pgsiqnU/edit?usp=sharing)
+
 [Image captioning report](https://overleaf.cvc.uab.es/read/tzndymvrqpmh#43fe93)
